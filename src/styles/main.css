@@ -1,0 +1,63 @@
+:root {
+  --bg: #000000;
+  --code-bg: #011627; /* night-owl */
+  --line: #1c2b3a;
+  --fg: #d6deeb;
+  --dim: #5f7e97;
+  --accent: #7fdbca;
+  --danger: #ef5350;
+  --mono:
+    'JetBrains Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono',
+    monospace;
+
+  color-scheme: dark;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--mono);
+  font-size: 14px;
+  -webkit-font-smoothing: antialiased;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.35;
+}
+
+input {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  outline: none;
+}
+
+/* ---------------------------------------------------------------------------
+ * This file styles the app shell only. The examples themselves run inside the
+ * REPL's sandbox iframe, which is a separate document and gets its own
+ * stylesheet: `src/playground/preview.css`, injected via
+ * `previewOptions.headHTML`.
+ * ------------------------------------------------------------------------ */
