@@ -21,7 +21,12 @@ onUnmounted(() => registry.dispose())
     </header>
 
     <div class="panels">
-      <section v-for="panel in example.components" :key="panel.name" class="panel">
+      <section
+        v-for="panel in example.components"
+        :key="panel.name"
+        class="panel"
+        :aria-label="panel.label"
+      >
         <header class="panel-head">
           <span>{{ panel.label }}</span>
           <span v-if="panel.writable" class="panel-status">WRITABLE</span>

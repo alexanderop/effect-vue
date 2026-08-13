@@ -1,6 +1,6 @@
-import { describe, it, expect } from 'vitest'
+import { describe, expect, it } from 'vitest'
 
-import { examples, getExample } from '../examples/registry'
+import { examples, getExample } from '../../examples/registry'
 
 describe('example registry', () => {
   it('matches the live reference tour exactly', () => {

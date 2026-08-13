@@ -24,11 +24,11 @@ These findings are from the pinned source, not from examples written for an olde
 
 ## The test pyramid
 
-| Layer | Runner | What belongs here |
-| --- | --- | --- |
-| Atom and Effect contracts | Vitest in Node + `@effect/vitest` | Derived state, atom families, typed failures, service layers, async transitions, interruption, and deterministic time/randomness |
-| Vue adapter contracts | Vitest Browser + Chromium | Registry injection, composable subscriptions, shared/isolated registries, component updates, and cleanup |
-| Routed application smoke tests | Vitest Browser + Chromium | Navigation-level rendering and the most important user journeys |
+| Layer                          | Runner                            | What belongs here                                                                                                                |
+| ------------------------------ | --------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| Atom and Effect contracts      | Vitest in Node + `@effect/vitest` | Derived state, atom families, typed failures, service layers, async transitions, interruption, and deterministic time/randomness |
+| Vue adapter contracts          | Vitest Browser + Chromium         | Registry injection, composable subscriptions, shared/isolated registries, component updates, and cleanup                         |
+| Routed application smoke tests | Vitest Browser + Chromium         | Navigation-level rendering and the most important user journeys                                                                  |
 
 Node tests should carry most of the behavior because they are fast and precise. Browser tests
 should prove only the Vue seam and visible workflows; they should not duplicate every Atom core
@@ -51,6 +51,31 @@ law.
    Vue component internals.
 8. Do not call public network services in the deterministic suite. Put the transport behind a
    service/layer and provide a test implementation when a network example gains business logic.
+9. Name Node tests `*.node.spec.ts` and browser tests `*.browser.spec.ts`. The Vitest projects use
+   those suffixes as the only routing rule; a test must not depend on an implicit fallback.
+10. Give every routed example one meaningful browser workflow. Cover its initial visible state and
+    primary interaction, then keep edge cases and state-machine laws in Node tests.
+11. Stub browser transports at their boundary and restore them after the test. Browser coverage
+    must never depend on a public API being available.
+
+## Suite layout
+
+```text
+src/__tests__/
+├── browser/
+│   ├── pages/          # one user workflow file per routed example
+│   └── integration/    # Vue adapter and application-shell contracts
+├── node/
+│   ├── pages/          # Atom and Effect contracts owned by a specific page
+│   ├── features/       # cross-cutting Atom primitives and registry behavior
+│   └── registry.node.spec.ts
+└── support/            # browser mounting, locators, and cleanup helpers
+```
+
+Name a page test after its route slug. For example, the `todos-ii` model and UI live in
+`node/pages/todos-ii.node.spec.ts` and `browser/pages/todos-ii.browser.spec.ts`. Put a test in
+`features` only when no single routed page owns that behavior. Browser files run sequentially
+because the examples intentionally contain module-scoped atoms and in-memory service state.
 
 ## Representative patterns
 
@@ -77,13 +102,16 @@ it.effect('finishes after 800 ms', () =>
 )
 ```
 
-Vue tests mount with an explicit registry and use browser locators. The shared helper in
-`src/__tests__/support/mountWithRegistry.ts` owns unmounting and registry disposal.
+Vue adapter tests mount with an explicit registry through
+`src/__tests__/support/mountWithRegistry.ts`. Routed-page tests use
+`src/__tests__/support/mountExample.ts`; `ExampleView` owns its page registry and the helper owns
+the Vue app unmount. Both styles use browser locators and clean up every mount.
 
 ## Commands
 
 ```sh
 npm run test:node
+npm run test:unit
 npm run test:browser
 npm test
 npm run type-check

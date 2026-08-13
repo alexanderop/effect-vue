@@ -2,10 +2,10 @@ import { AtomRegistry } from '@effect/atom-vue'
 import { expect, test } from 'vitest'
 import { page } from 'vitest/browser'
 
-import BasicCounter from '../examples/basic-atom/Counter.vue'
-import DerivedCounter from '../examples/derived-atom-i/Counter.vue'
-import Doubled from '../examples/derived-atom-i/Doubled.vue'
-import { mountWithRegistry } from './support/mountWithRegistry'
+import BasicCounter from '../../../examples/basic-atom/Counter.vue'
+import DerivedCounter from '../../../examples/derived-atom-i/Counter.vue'
+import Doubled from '../../../examples/derived-atom-i/Doubled.vue'
+import { mountWithRegistry } from '../../support/mountWithRegistry'
 
 test('keeps separate Vue app registries isolated', async () => {
   const firstMount = mountWithRegistry(BasicCounter, { label: 'First counter' })
