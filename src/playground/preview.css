@@ -10,12 +10,12 @@
  * ------------------------------------------------------------------------ */
 
 :root {
-  --bg: #011627; /* night-owl, matching the editor beside it */
-  --line: #1c2b3a;
-  --fg: #d6deeb;
-  --dim: #5f7e97;
-  --accent: #7fdbca;
-  --danger: #ef5350;
+  --bg: #0a0a0a;
+  --line: #262626;
+  --fg: #f5f5f5;
+  --dim: #737373;
+  --accent: #d4d4d4;
+  --danger: #f87171;
   --mono:
     'JetBrains Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono',
     monospace;
@@ -31,7 +31,7 @@
 
 body {
   margin: 0;
-  padding: 22px;
+  padding: 18px;
   background: var(--bg);
   color: var(--fg);
   font-family: var(--mono);
@@ -65,7 +65,7 @@ input {
 .panels {
   display: flex;
   flex-direction: column;
-  gap: 22px;
+  gap: 16px;
 }
 
 .panel {
@@ -73,12 +73,21 @@ input {
 }
 
 .panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
   padding: 9px 14px;
   border-bottom: 1px solid var(--line);
   font-size: 11px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--fg);
+}
+
+.panel-status {
+  color: var(--dim);
+  letter-spacing: 0;
 }
 
 .panel-body .value {
@@ -99,6 +108,16 @@ input {
   color: var(--dim);
 }
 
+.panel-body .waiting {
+  opacity: 0.4;
+  filter: blur(1px);
+  transform: scale(0.98);
+  transition:
+    opacity 160ms ease,
+    filter 160ms ease,
+    transform 160ms ease;
+}
+
 .panel-body .value.error {
   color: var(--danger);
   font-size: 16px;
@@ -109,6 +128,10 @@ input {
   border-top: 1px solid var(--line);
 }
 
+.panel-body .actions.standalone {
+  border-top: none;
+}
+
 .panel-body .actions > * {
   flex: 1 1 0;
   min-width: 0;
@@ -116,6 +139,10 @@ input {
   text-align: center;
   border-left: 1px solid var(--line);
   transition: background-color 100ms ease;
+}
+
+.panel-body .actions > button {
+  background: #171717;
 }
 
 .panel-body .actions > *:first-child {
@@ -176,4 +203,217 @@ input {
   color: var(--dim);
   font-size: 12px;
   line-height: 1.6;
+}
+
+.panel-body .dice-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.panel-body .die {
+  font-size: 48px;
+  line-height: 1;
+}
+
+.panel-body .optimistic-like {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  padding: 28px 16px;
+  border-bottom: 1px solid var(--line);
+}
+
+.panel-body .optimistic-like .heart {
+  color: #ef4444;
+  font-size: 36px;
+}
+
+.panel-body .optimistic-count {
+  font-size: 40px;
+  font-variant-numeric: tabular-nums;
+}
+
+.panel-body .server-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--line);
+}
+
+.panel-body .check-row,
+.panel-body .message,
+.panel-body .stats {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border-top: 1px solid var(--line);
+}
+
+.panel-body .stats > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.panel-body .stats strong {
+  font-size: 28px;
+  font-weight: 400;
+}
+
+.panel-body .stats span {
+  color: var(--dim);
+  font-size: 11px;
+}
+
+.panel-body .comments-section {
+  padding: 18px 16px;
+  border-top: 1px solid var(--line);
+}
+
+.panel-body .comments-section:first-child {
+  border-top: none;
+}
+
+.panel-body .comments-section h2 {
+  margin: 0 0 8px;
+  font-size: 14px;
+}
+
+.panel-body .comments-section p {
+  margin: 0;
+  color: var(--dim);
+  line-height: 1.6;
+}
+
+.panel-body .github-button {
+  width: 100%;
+  margin-top: 14px;
+  padding: 12px;
+  background: #f5f5f5;
+  color: #0a0a0a;
+}
+
+.panel-body .muted-section {
+  opacity: 0.65;
+}
+
+.panel-body .check-row input {
+  width: auto;
+  padding: 0;
+}
+
+.panel-body .error-text {
+  color: var(--danger);
+}
+
+.panel-body .inline-form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.panel-body .inline-form input {
+  border-bottom: none;
+}
+
+.panel-body .inline-form button {
+  padding: 0 20px;
+  border-left: 1px solid var(--line);
+  background: #171717;
+}
+
+.panel-body .todo-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 16px;
+  border-top: 1px solid var(--line);
+}
+
+.panel-body .todo-row:first-child {
+  border-top: none;
+}
+
+.panel-body .todo-toggle {
+  font-size: 18px;
+}
+
+.panel-body .todo-delete {
+  color: var(--dim);
+}
+
+.panel-body .completed {
+  color: var(--dim);
+  text-decoration: line-through;
+}
+
+.panel-body .stats {
+  justify-content: space-around;
+  border-top: none;
+  font-variant-numeric: tabular-nums;
+}
+
+.panel-body .results-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.panel-body .results-table td {
+  padding: 8px 12px;
+  border-top: 1px solid var(--line);
+}
+
+.panel-body .results-table td:last-child {
+  color: var(--dim);
+}
+
+.panel-body .streaming-intro,
+.panel-body .pattern-description {
+  padding: 16px;
+}
+
+.panel-body .streaming-intro h2,
+.panel-body .pattern-description h3 {
+  margin: 0 0 7px;
+  font-size: 14px;
+}
+
+.panel-body .streaming-intro p,
+.panel-body .pattern-description p {
+  margin: 0;
+  color: var(--dim);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.panel-body .pattern-tabs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border-block: 1px solid var(--line);
+}
+
+.panel-body .pattern-tabs button {
+  padding: 11px 8px;
+  border-left: 1px solid var(--line);
+  color: var(--dim);
+}
+
+.panel-body .pattern-tabs button:first-child {
+  border-left: none;
+}
+
+.panel-body .pattern-tabs button.active {
+  background: #f5f5f5;
+  color: #0a0a0a;
+}
+
+.panel-body .pattern-description {
+  border-bottom: 1px solid var(--line);
 }

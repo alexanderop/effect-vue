@@ -11,20 +11,27 @@ const label = (name: string) => name.replace(/([a-z])([A-Z])/g, '$1 $2').toUpper
  * The entry point the sandbox mounts.
  *
  * It is generated rather than checked in because it is pure wiring: it imports
- * whatever `.vue` files the example directory happens to contain and gives each
- * one a labelled panel. Keeping it in the file list (instead of hiding it) is
+ * the `.vue` files listed in the example metadata and gives each one a labelled
+ * panel. Keeping it in the file list (instead of hiding it) is
  * deliberate — it shows how the registry gets provided, which is the one piece
  * of setup the individual example components assume but never show.
  */
-const generateApp = (panels: ReadonlyArray<SourceFile>): string => {
+const generateApp = (
+  panels: ReadonlyArray<SourceFile>,
+  panelOrder: ReadonlyArray<string>,
+  writablePanels: ReadonlyArray<string>,
+): string => {
   const names = panels.map(componentName)
+  const mountedNames = panelOrder.filter((name) => names.includes(name))
 
-  const imports = names.map((name) => `import ${name} from './${name}.vue'`).join('\n')
+  const imports = mountedNames.map((name) => `import ${name} from './${name}.vue'`).join('\n')
 
-  const sections = names
+  const sections = mountedNames
     .map(
       (name) => `    <section class="panel">
-      <header class="panel-head">${label(name)}</header>
+      <header class="panel-head">
+        <span>${label(name)}</span>${writablePanels.includes(name) ? '\n        <span class="panel-status">WRITABLE</span>' : ''}
+      </header>
       <div class="panel-body"><${name} /></div>
     </section>`,
     )
@@ -85,14 +92,17 @@ const TSCONFIG = JSON.stringify(
  * sandbox is exactly what lives in `src/examples/<slug>/`.
  */
 export const buildFiles = (example: Example): Record<string, string> => {
-  const files: Record<string, string> = { 'tsconfig.json': TSCONFIG }
+  const files: Record<string, string> = {
+    'import-map.json': '{}',
+    'tsconfig.json': TSCONFIG,
+  }
 
   for (const file of example.files) {
     files[`src/${file.name}`] = file.code
   }
 
   const panels = example.files.filter((file) => file.lang === 'vue')
-  files[MAIN_FILE] = generateApp(panels)
+  files[MAIN_FILE] = generateApp(panels, example.panels, example.writablePanels ?? [])
 
   return files
 }

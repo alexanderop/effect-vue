@@ -3,7 +3,9 @@
  *
  * Convention inside a directory:
  *  - `atoms.ts` (optional) holds the atom definitions and is shown first
- *  - every `.vue` file becomes its own labelled panel, alphabetically
+ *  - `panels` chooses which `.vue` files are mounted and preserves the
+ *    reference example's panel order; other components remain available to
+ *    imported panels as helpers
  *
  * The files are only ever read as text: they are handed to the REPL, compiled
  * in the browser and run inside its sandbox iframe. Nothing here is imported
@@ -13,88 +15,91 @@ export interface ExampleMeta {
   readonly slug: string
   readonly title: string
   readonly blurb: string
+  readonly panels: ReadonlyArray<string>
+  readonly writablePanels?: ReadonlyArray<string>
 }
 
 export const examples: ReadonlyArray<ExampleMeta> = [
   {
     slug: 'basic-atom',
     title: 'Basic Atom',
-    blurb: 'A writable atom holding a plain value, read and written with useAtom.',
+    blurb: 'Create reactive state with Atom.make() and consume it with useAtom.',
+    panels: ['Counter'],
+    writablePanels: ['Counter'],
   },
   {
-    slug: 'derived-atom',
-    title: 'Derived Atom',
-    blurb: 'An atom computed from another atom. Recomputes only when a dependency changes.',
+    slug: 'derived-atom-i',
+    title: 'Derived Atom I',
+    blurb: 'Use the getter to derive read-only values that stay in sync with source atoms.',
+    panels: ['Counter', 'Doubled'],
+    writablePanels: ['Counter'],
   },
   {
     slug: 'derived-atom-ii',
     title: 'Derived Atom II',
-    blurb: 'One derived atom over several sources, recomputed when any of them changes.',
+    blurb: 'Derived atoms can watch multiple source atoms and recompute when any change.',
+    panels: ['Text', 'Counter', 'Repeated'],
+    writablePanels: ['Text', 'Counter'],
   },
   {
-    slug: 'writable-derived',
-    title: 'Writable Derived',
-    blurb: 'A derived atom with a write function, so reads and writes can differ.',
+    slug: 'effectful-atom',
+    title: 'Effectful Atom',
+    blurb: 'An Effect atom reruns async logic automatically when a source atom changes.',
+    panels: ['Counter', 'Dice', 'Total'],
+    writablePanels: ['Counter'],
   },
   {
-    slug: 'atom-family',
-    title: 'Atom Family',
-    blurb: 'One atom per key, created lazily and garbage collected when unused.',
+    slug: 'effectful-atom-ii',
+    title: 'Effectful Atom II',
+    blurb: 'Fetch real-world data from Open-Meteo whenever the selected city changes.',
+    panels: ['City', 'Weather'],
+    writablePanels: ['City'],
   },
   {
-    slug: 'effect-atom',
-    title: 'Effect Atom',
-    blurb: 'An atom whose value is produced by an Effect, exposed as an AsyncResult.',
-  },
-  {
-    slug: 'effect-atom-ii',
-    title: 'Effect Atom II',
-    blurb: 'An Effect atom that depends on another atom, and a plain atom derived from its result.',
-  },
-  {
-    slug: 'effect-atom-iii',
-    title: 'Effect Atom III',
-    blurb: 'A real request inside an atom: fetch, decode with a Schema, cancel on change.',
-  },
-  {
-    slug: 'async-result',
-    title: 'AsyncResult',
-    blurb: 'Matching on Initial / Success / Failure, including the waiting flag.',
+    slug: 'atom-fn',
+    title: 'Atom.Fn',
+    blurb: 'Trigger an Effect with an argument and expose its result as an atom.',
+    panels: ['Roll', 'Dice', 'Total'],
+    writablePanels: ['Roll'],
   },
   {
     slug: 'get-result',
     title: 'get.result',
-    blurb: 'Unwrap other Effect atoms inside an Effect atom, suspending until they settle.',
+    blurb: 'Combine independent async results and control whether stale values may be reused.',
+    panels: ['Author', 'BooksPublished', 'AgeAtDeath', 'BooksPerYear'],
+    writablePanels: ['Author'],
   },
   {
-    slug: 'atom-fn',
-    title: 'Atom Fn',
-    blurb: 'Run an Effect on demand with an argument, and interrupt the previous run.',
+    slug: 'optimistic',
+    title: 'Atom.optimistic',
+    blurb: 'Update instantly, track the mutation, and roll back when the Effect fails.',
+    panels: ['Like'],
   },
   {
-    slug: 'atom-runtime',
-    title: 'Atom Runtime',
-    blurb: 'Build atoms on top of a Layer so they can use Effect services.',
+    slug: 'todos',
+    title: 'Todo List I',
+    blurb: 'Effect service state, Atom.runtime, Atom.family, and reactive CRUD mutations.',
+    panels: ['CreateTodo', 'TodoList', 'Stats'],
+    writablePanels: ['CreateTodo'],
   },
   {
-    slug: 'stream-atom',
-    title: 'Stream Atom',
-    blurb: 'An atom fed by a Stream. The subscription lives as long as the atom is mounted.',
+    slug: 'todos-ii',
+    title: 'Todo List II',
+    blurb: 'Derive a filtered todo list from service data and local filter state.',
+    panels: ['CreateTodo', 'Filter', 'FilteredTodos', 'Stats'],
+    writablePanels: ['CreateTodo', 'Filter'],
   },
   {
-    slug: 'atom-pull',
-    title: 'Atom Pull',
-    blurb: 'Pull a Stream one chunk at a time — pagination without a state machine.',
+    slug: 'comments',
+    title: 'Micro Comments',
+    blurb: 'Authenticated micro comments with Effect RPC and optimistic atoms.',
+    panels: ['MicroComments'],
   },
   {
-    slug: 'swr-refresh',
-    title: 'SWR & Refresh',
-    blurb: 'Serve stale data while revalidating, and refresh on demand.',
-  },
-  {
-    slug: 'persisted-atom',
-    title: 'Persisted Atom',
-    blurb: 'An atom backed by a KeyValueStore, here localStorage. Reload the page.',
+    slug: 'streaming',
+    title: 'Streaming Search',
+    blurb: 'Compare Stream.scan, Atom.pull, and manual state for streaming results.',
+    panels: ['StreamingSearch'],
   },
 ]
 

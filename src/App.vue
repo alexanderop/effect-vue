@@ -29,18 +29,9 @@ onUnmounted(() => window.removeEventListener('keydown', onKey))
     <header class="top">
       <div class="heading">
         <h1>{{ current?.title ?? 'Effect Atom' }}</h1>
-        <p v-if="current" class="blurb">{{ current.blurb }}</p>
       </div>
 
       <nav class="nav">
-        <a
-          class="credit"
-          href="https://atom.kitlangton.com"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          after kitlangton
-        </a>
         <span class="count">{{ index + 1 }} / {{ examples.length }}</span>
         <button aria-label="Previous example" :disabled="index <= 0" @click="go(-1)">
           <svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true">
@@ -85,29 +76,17 @@ onUnmounted(() => window.removeEventListener('keydown', onKey))
   align-items: center;
   justify-content: space-between;
   gap: 24px;
-  padding: 14px 20px;
+  min-height: 65px;
+  padding: 14px 24px;
   border-bottom: 1px solid var(--line);
-}
-
-.heading {
-  min-width: 0;
 }
 
 h1 {
   margin: 0;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-}
-
-.blurb {
-  margin: 5px 0 0;
-  font-size: 12px;
-  color: var(--dim);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .nav {
@@ -115,16 +94,6 @@ h1 {
   align-items: center;
   gap: 10px;
   flex: 0 0 auto;
-}
-
-.credit {
-  font-size: 12px;
-  color: var(--dim);
-  text-decoration: none;
-}
-
-.credit:hover {
-  color: var(--fg);
 }
 
 .count {
@@ -137,20 +106,13 @@ h1 {
 .nav button {
   display: grid;
   place-items: center;
-  width: 34px;
-  height: 28px;
-  border: 1px solid var(--line);
+  width: 42px;
+  height: 36px;
+  background: #171717;
   transition: background-color 100ms ease;
 }
 
 .nav button:hover:not(:disabled) {
   background: rgba(127, 219, 202, 0.1);
-}
-
-@media (max-width: 700px) {
-  .blurb,
-  .credit {
-    display: none;
-  }
 }
 </style>

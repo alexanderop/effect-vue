@@ -20,15 +20,9 @@ const ATOM_VUE = __ATOM_VUE_VERSION__
  *  - `effect` itself is *not* externalised — esm.sh has to bundle its real npm
  *    dependencies (msgpackr and friends), which the import map cannot resolve.
  *
- * `?bundle=all` collapses effect's entry point into a single file. Without it
- * the entry re-exports every module individually and the sandbox makes ~930
- * requests before it can render; with it, ~200. The cost is that the bundle
- * cannot also serve the `effect/...` deep paths, so `@effect/atom-vue` pulls a
- * second copy of the runtime through them. That is only safe because Effect
- * keys its services by string rather than by module-local symbol — every
- * example here, including the Layer-and-services one, was checked against it.
- * If a future example starts failing to resolve a service, drop `?bundle=all`
- * first: that collapses everything back onto one copy.
+ * `?bundle=all` collapses Effect's root entry point into a single file instead
+ * of making the sandbox load hundreds of re-exported modules. Deep imports are
+ * still mapped separately for `@effect/atom-vue`.
  */
 export const buildImportMap = (): ImportMap => ({
   imports: {
