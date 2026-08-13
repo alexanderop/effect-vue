@@ -1,13 +1,11 @@
 # effect-vue
 
-A Vue port of Kit Langton's [Effect Atom Examples](https://atom.kitlangton.com) — an interactive
-tour of [Effect](https://effect.website) Atom with the source on the left and the running
-component on the right.
+A Vue port of Kit Langton's [Effect Atom Examples](https://atom.kitlangton.com) — a routed,
+interactive tour of [Effect](https://effect.website) Atom.
 
 All twelve examples from the reference tour are included, from `Atom.make(0)` through the three
-streaming-search patterns. Every panel on the right is the code on the left — the playground
-reads the example files with `import.meta.glob('...', { query: '?raw' })`, so the source and the
-running Vue component cannot drift.
+streaming-search patterns. Each example is a normal application page that mounts the Vue
+components from `src/examples` directly; there is no embedded editor or playground runtime.
 
 ```sh
 npm install
@@ -19,14 +17,13 @@ Arrow keys move between examples, and each one has its own URL (`/basic-atom`, `
 ## Adding an example
 
 1. Create `src/examples/<slug>/`.
-2. Put the atom definitions in `atoms.ts` — it is always shown first.
+2. Put the atom definitions in `atoms.ts`.
 3. Add one `.vue` file per panel, plus any helper components the panels import.
 4. Add the example to the ordered list in `src/examples/registry.ts`. Its `panels` array controls
    the mounted panels and their order; `writablePanels` controls the badges.
 
 Example components stay deliberately plain — a `value` block, an `actions` row, ordinary
-elements — and `src/styles/main.css` gives them the panel chrome, so what the audience reads is
-component code rather than styling.
+elements — and `src/styles/main.css` gives them the shared application styling.
 
 ## The Vue bindings
 
@@ -38,13 +35,13 @@ component code rather than styling.
 - **There is no `useAtomRefresh`.** Refreshing goes through the registry:
   `injectRegistry().refresh(atom)`.
 
-The generated playground `App.vue` provides a fresh registry with
-`provide(registryKey, AtomRegistry.make())`. Without it, everything falls back to the
-module-level `defaultRegistry`.
+Each routed example page provides and disposes its own registry with
+`provide(registryKey, AtomRegistry.make())`. Without it, everything falls back to the module-level
+`defaultRegistry`.
 
 ## Credit
 
 The original is [Effect Atom Examples](https://atom.kitlangton.com) by
-[Kit Langton](https://kitlangton.com) — the example sequence, the split-screen layout and most of
-the individual examples are his. This repository rewrites them against the Vue bindings
+[Kit Langton](https://kitlangton.com) — the example sequence and most of the individual examples
+are his. This repository rewrites them against the Vue bindings
 (`@effect/atom-vue`) and Effect v4; any mistakes in the translation are mine.

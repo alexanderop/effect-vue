@@ -7,7 +7,7 @@ export const rollDiceAtom = Atom.fn(
 
     const rolls: Array<number> = []
     for (let index = 0; index < 3; index++) {
-      rolls.push(yield* Random.nextIntBetween(1, 7))
+      rolls.push(yield* Random.nextIntBetween(1, 6))
     }
     return rolls
   }),

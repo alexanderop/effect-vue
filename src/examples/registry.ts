@@ -1,15 +1,8 @@
+import type { Component } from 'vue'
+
 /**
- * The ordered tour. Each entry maps to a directory under `src/examples/`.
- *
- * Convention inside a directory:
- *  - `atoms.ts` (optional) holds the atom definitions and is shown first
- *  - `panels` chooses which `.vue` files are mounted and preserves the
- *    reference example's panel order; other components remain available to
- *    imported panels as helpers
- *
- * The files are only ever read as text: they are handed to the REPL, compiled
- * in the browser and run inside its sandbox iframe. Nothing here is imported
- * into the host app, so the source on screen is the source that is running.
+ * The ordered example tour. Each entry maps to a directory under
+ * `src/examples/`; `panels` chooses which components are mounted on its page.
  */
 export interface ExampleMeta {
   readonly slug: string
@@ -103,43 +96,41 @@ export const examples: ReadonlyArray<ExampleMeta> = [
   },
 ]
 
-const rawSources = import.meta.glob('./*/*.{ts,vue}', {
-  query: '?raw',
+const componentModules = import.meta.glob('./*/*.vue', {
   import: 'default',
   eager: true,
-}) as Record<string, string>
+}) as Record<string, Component>
 
-export interface SourceFile {
+export interface ExamplePanel {
   readonly name: string
-  readonly lang: 'ts' | 'vue'
-  readonly code: string
+  readonly label: string
+  readonly writable: boolean
+  readonly component: Component
 }
 
 export interface Example extends ExampleMeta {
-  readonly files: ReadonlyArray<SourceFile>
+  readonly components: ReadonlyArray<ExamplePanel>
 }
 
-const fileName = (path: string) => path.slice(path.lastIndexOf('/') + 1)
-
-const sortFiles = (a: string, b: string) => {
-  // `atoms.ts` always leads: it is where the example is defined.
-  const rank = (p: string) => (fileName(p) === 'atoms.ts' ? 0 : 1)
-  return rank(a) - rank(b) || a.localeCompare(b)
-}
+const panelLabel = (name: string) => name.replace(/([a-z])([A-Z])/g, '$1 $2').toUpperCase()
 
 const build = (meta: ExampleMeta): Example => {
-  const prefix = `./${meta.slug}/`
+  const components = meta.panels.map((name) => {
+    const component = componentModules[`./${meta.slug}/${name}.vue`]
 
-  const files = Object.keys(rawSources)
-    .filter((path) => path.startsWith(prefix))
-    .sort(sortFiles)
-    .map((path) => ({
-      name: fileName(path),
-      lang: path.endsWith('.vue') ? ('vue' as const) : ('ts' as const),
-      code: rawSources[path]!.trimEnd(),
-    }))
+    if (!component) {
+      throw new Error(`Missing component "${name}" for example "${meta.slug}"`)
+    }
 
-  return { ...meta, files }
+    return {
+      name,
+      label: panelLabel(name),
+      writable: meta.writablePanels?.includes(name) ?? false,
+      component,
+    }
+  })
+
+  return { ...meta, components }
 }
 
 const bySlug = new Map(examples.map((meta) => [meta.slug, build(meta)]))

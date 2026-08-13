@@ -16,6 +16,15 @@ const go = (delta: number) => {
 
 const onKey = (event: KeyboardEvent) => {
   if (event.metaKey || event.ctrlKey || event.altKey) return
+
+  const target = event.target
+  if (
+    target instanceof HTMLElement &&
+    (target.isContentEditable || ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName))
+  ) {
+    return
+  }
+
   if (event.key === 'ArrowLeft') go(-1)
   if (event.key === 'ArrowRight') go(1)
 }
@@ -59,19 +68,24 @@ onUnmounted(() => window.removeEventListener('keydown', onKey))
     </header>
 
     <main class="body">
-      <RouterView />
+      <RouterView v-slot="{ Component, route: activeRoute }">
+        <component :is="Component" :key="String(activeRoute.params.slug)" />
+      </RouterView>
     </main>
   </div>
 </template>
 
 <style scoped>
 .shell {
-  height: 100%;
+  min-height: 100%;
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
 }
 
 .top {
+  position: sticky;
+  top: 0;
+  z-index: 10;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -79,6 +93,8 @@ onUnmounted(() => window.removeEventListener('keydown', onKey))
   min-height: 65px;
   padding: 14px 24px;
   border-bottom: 1px solid var(--line);
+  background: color-mix(in srgb, var(--bg) 92%, transparent);
+  backdrop-filter: blur(12px);
 }
 
 h1 {
@@ -114,5 +130,23 @@ h1 {
 
 .nav button:hover:not(:disabled) {
   background: rgba(127, 219, 202, 0.1);
+}
+
+@media (max-width: 560px) {
+  .top {
+    gap: 12px;
+    padding-inline: 16px;
+  }
+
+  h1 {
+    max-width: 180px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .count {
+    display: none;
+  }
 }
 </style>
