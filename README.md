@@ -1,7 +1,8 @@
 # effect-vue
 
-An interactive tour of [Effect](https://effect.website) Atom in Vue, in the shape of Kit
-Langton's Atom walkthrough: source on the left, the running component on the right.
+A Vue port of Kit Langton's [Effect Atom Examples](https://atom.kitlangton.com) — an interactive
+tour of [Effect](https://effect.website) Atom with the source on the left and the running
+component on the right.
 
 Sixteen examples, from `Atom.make(0)` to an atom persisted in `localStorage` through a
 `KeyValueStore` Layer. Every panel on the right is the code on the left — the pane reads the
@@ -39,3 +40,10 @@ component code rather than styling.
 
 `src/main.ts` provides a registry with `app.provide(registryKey, AtomRegistry.make())`. Without
 it, everything falls back to the module-level `defaultRegistry`.
+
+## Credit
+
+The original is [Effect Atom Examples](https://atom.kitlangton.com) by
+[Kit Langton](https://kitlangton.com) — the example sequence, the split-screen layout and most of
+the individual examples are his. This repository rewrites them against the Vue bindings
+(`@effect/atom-vue`) and Effect v4; any mistakes in the translation are mine.

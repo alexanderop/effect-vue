@@ -33,6 +33,14 @@ onUnmounted(() => window.removeEventListener('keydown', onKey))
       </div>
 
       <nav class="nav">
+        <a
+          class="credit"
+          href="https://atom.kitlangton.com"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          after kitlangton
+        </a>
         <span class="count">{{ index + 1 }} / {{ examples.length }}</span>
         <button aria-label="Previous example" :disabled="index <= 0" @click="go(-1)">
           <svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true">
@@ -109,6 +117,16 @@ h1 {
   flex: 0 0 auto;
 }
 
+.credit {
+  font-size: 12px;
+  color: var(--dim);
+  text-decoration: none;
+}
+
+.credit:hover {
+  color: var(--fg);
+}
+
 .count {
   margin-right: 8px;
   font-size: 12px;
@@ -130,7 +148,8 @@ h1 {
 }
 
 @media (max-width: 700px) {
-  .blurb {
+  .blurb,
+  .credit {
     display: none;
   }
 }
