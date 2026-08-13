@@ -39,6 +39,21 @@ Each routed example page provides and disposes its own registry with
 `provide(registryKey, AtomRegistry.make())`. Without it, everything falls back to the module-level
 `defaultRegistry`.
 
+## Testing strategy
+
+The suite mirrors Effect's own approach: Atom and Effect behavior is tested in Node with
+`@effect/vitest`, `it.effect`, explicit layers, `TestClock`, and deterministic synchronization;
+the Vue binding is tested separately in real Chromium with a fresh registry per mount.
+
+```sh
+npm run test:node
+npm run test:browser
+npm test
+```
+
+See [docs/testing.md](docs/testing.md) for the upstream findings, test pyramid, repository rules,
+and copyable patterns.
+
 ## Credit
 
 The original is [Effect Atom Examples](https://atom.kitlangton.com) by
