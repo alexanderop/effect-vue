@@ -1,41 +1,57 @@
 import { describe, expect, it } from 'vitest'
 
-import { examples, getExample } from '../../examples/registry'
+import { examples, exampleIndex, getExample } from '@/examples/registry'
 
 describe('example registry', () => {
-  it('matches the live reference tour exactly', () => {
-    expect(examples.map(({ slug, title }) => ({ slug, title }))).toEqual([
-      { slug: 'basic-atom', title: 'Basic Atom' },
-      { slug: 'derived-atom-i', title: 'Derived Atom I' },
-      { slug: 'derived-atom-ii', title: 'Derived Atom II' },
-      { slug: 'effectful-atom', title: 'Effectful Atom' },
-      { slug: 'effectful-atom-ii', title: 'Effectful Atom II' },
-      { slug: 'atom-fn', title: 'Atom.Fn' },
-      { slug: 'get-result', title: 'get.result' },
-      { slug: 'optimistic', title: 'Atom.optimistic' },
-      { slug: 'todos', title: 'Todo List I' },
-      { slug: 'todos-ii', title: 'Todo List II' },
-      { slug: 'comments', title: 'Micro Comments' },
-      { slug: 'streaming', title: 'Streaming Search' },
+  it('lists the tour in teaching order', () => {
+    expect(examples.map((example) => example.slug)).toEqual([
+      'basic-atom',
+      'derived-atom',
+      'derived-atom-multi-source',
+      'writable-derived-atom',
+      'atom-family',
+      'effect-atom',
+      'async-result-states',
+      'effectful-atom',
+      'effectful-atom-fetch',
+      'atom-debounce',
+      'atom-fn',
+      'atom-runtime',
+      'get-result',
+      'atom-refresh',
+      'atom-swr',
+      'stream-atom',
+      'atom-pull',
+      'atom-optimistic',
+      'persisted-atom',
+      'search-param',
+      'atom-ref',
+      'todo-list',
+      'filtered-todos',
+      'streaming-search',
     ])
   })
 
-  it('resolves every listed example to real Vue components', () => {
-    for (const meta of examples) {
-      const example = getExample(meta.slug)
-
-      expect(example, `missing directory for "${meta.slug}"`).toBeDefined()
-      expect(example!.components.map((panel) => panel.name)).toEqual(meta.panels)
-      expect(example!.components.every((panel) => Boolean(panel.component))).toBe(true)
+  it('gives every example a root component and a teaching note', () => {
+    for (const example of examples) {
+      expect(example.component, `missing root component for "${example.slug}"`).toBeTruthy()
+      expect(example.api.length, `missing api list for "${example.slug}"`).toBeGreaterThan(0)
+      expect(example.effectNote.length, `missing effectNote for "${example.slug}"`).toBeGreaterThan(
+        0,
+      )
+      expect(example.vueNote.length, `missing vueNote for "${example.slug}"`).toBeGreaterThan(0)
     }
   })
 
-  it('marks only configured panels as writable', () => {
-    for (const meta of examples) {
-      const example = getExample(meta.slug)!
-      expect(
-        example.components.filter((panel) => panel.writable).map((panel) => panel.name),
-      ).toEqual(meta.writablePanels ?? [])
-    }
+  it('uses a unique slug and title per example', () => {
+    expect(new Set(examples.map((example) => example.slug)).size).toBe(examples.length)
+    expect(new Set(examples.map((example) => example.title)).size).toBe(examples.length)
+  })
+
+  it('looks an example up by slug and reports its position', () => {
+    expect(getExample('atom-family')?.title).toBe('Atom Family')
+    expect(getExample('nope')).toBeUndefined()
+    expect(exampleIndex('basic-atom')).toBe(0)
+    expect(exampleIndex('nope')).toBe(-1)
   })
 })

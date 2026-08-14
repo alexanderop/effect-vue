@@ -7,6 +7,10 @@ import { getExample } from '@/examples/registry'
 const props = defineProps<{ slug: string }>()
 
 const example = computed(() => getExample(props.slug))
+
+// Every routed page owns its registry, so navigating away disposes the atoms
+// this example mounted. Without this, everything would fall back to the
+// module-level defaultRegistry and leak state between examples.
 const registry = AtomRegistry.make()
 
 provide(registryKey, registry)
@@ -18,23 +22,24 @@ onUnmounted(() => registry.dispose())
     <header class="example-intro">
       <span class="eyebrow">Interactive example</span>
       <p>{{ example.blurb }}</p>
+
+      <ul class="api-list">
+        <li v-for="name in example.api" :key="name">{{ name }}</li>
+      </ul>
     </header>
 
-    <div class="panels">
-      <section
-        v-for="panel in example.components"
-        :key="panel.name"
-        class="panel"
-        :aria-label="panel.label"
-      >
-        <header class="panel-head">
-          <span>{{ panel.label }}</span>
-          <span v-if="panel.writable" class="panel-status">WRITABLE</span>
-        </header>
-        <div class="panel-body">
-          <component :is="panel.component" />
-        </div>
-      </section>
-    </div>
+    <component :is="example.component" />
+
+    <section class="example-notes" aria-label="Notes">
+      <div class="note">
+        <h2>In Effect</h2>
+        <p>{{ example.effectNote }}</p>
+      </div>
+
+      <div class="note">
+        <h2>In Vue</h2>
+        <p>{{ example.vueNote }}</p>
+      </div>
+    </section>
   </article>
 </template>

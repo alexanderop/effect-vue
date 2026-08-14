@@ -14,7 +14,7 @@ export default mergeConfig(
           test: {
             name: 'node',
             environment: 'node',
-            include: ['src/**/__tests__/**/*.node.spec.ts'],
+            include: ['src/**/*.node.spec.ts'],
             exclude: [...configDefaults.exclude, 'e2e/**'],
           },
         },
@@ -22,7 +22,7 @@ export default mergeConfig(
           extends: true,
           test: {
             name: 'browser',
-            include: ['src/**/__tests__/**/*.browser.spec.ts'],
+            include: ['src/**/*.browser.spec.ts'],
             fileParallelism: false,
             browser: {
               enabled: true,

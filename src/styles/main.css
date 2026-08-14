@@ -86,6 +86,53 @@ input {
   line-height: 1.65;
 }
 
+.api-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.api-list li {
+  padding: 3px 8px;
+  border: 1px solid var(--line);
+  background: #101010;
+  color: var(--accent);
+  font-family: var(--mono);
+  font-size: 12px;
+}
+
+.example-notes {
+  display: grid;
+  gap: 16px;
+  margin-top: 28px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+.example-notes .note {
+  padding: 16px 18px;
+  border: 1px solid var(--line);
+  background: #0d0d0d;
+}
+
+.example-notes h2 {
+  margin: 0 0 8px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+
+.example-notes p {
+  margin: 0;
+  color: #b5b5b5;
+  font-size: 14px;
+  line-height: 1.65;
+}
+
 .panels {
   display: flex;
   flex-direction: column;

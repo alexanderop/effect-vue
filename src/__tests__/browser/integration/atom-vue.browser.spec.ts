@@ -2,14 +2,14 @@ import { AtomRegistry } from '@effect/atom-vue'
 import { expect, test } from 'vitest'
 import { page } from 'vitest/browser'
 
-import BasicCounter from '../../../examples/basic-atom/Counter.vue'
-import DerivedCounter from '../../../examples/derived-atom-i/Counter.vue'
-import Doubled from '../../../examples/derived-atom-i/Doubled.vue'
-import { mountWithRegistry } from '../../support/mountWithRegistry'
+import BasicAtomCounter from '@/examples/basic-atom/BasicAtomCounter.vue'
+import DerivedAtomCounter from '@/examples/derived-atom/DerivedAtomCounter.vue'
+import DerivedAtomDoubled from '@/examples/derived-atom/DerivedAtomDoubled.vue'
+import { mountWithRegistry } from '@/testing/mountWithRegistry'
 
 test('keeps separate Vue app registries isolated', async () => {
-  const firstMount = mountWithRegistry(BasicCounter, { label: 'First counter' })
-  const secondMount = mountWithRegistry(BasicCounter, { label: 'Second counter' })
+  const firstMount = mountWithRegistry(BasicAtomCounter, { label: 'First counter' })
+  const secondMount = mountWithRegistry(BasicAtomCounter, { label: 'Second counter' })
   const first = page.getByRole('region', { name: 'First counter' })
   const second = page.getByRole('region', { name: 'Second counter' })
 
@@ -26,11 +26,14 @@ test('keeps separate Vue app registries isolated', async () => {
 
 test('updates a derived atom across Vue components sharing one registry', async () => {
   const registry = AtomRegistry.make()
-  const counterMount = mountWithRegistry(DerivedCounter, {
+  const counterMount = mountWithRegistry(DerivedAtomCounter, {
     label: 'Source counter',
     registry,
   })
-  const doubledMount = mountWithRegistry(Doubled, { label: 'Doubled count', registry })
+  const doubledMount = mountWithRegistry(DerivedAtomDoubled, {
+    label: 'Doubled count',
+    registry,
+  })
   const counter = page.getByRole('region', { name: 'Source counter' })
   const doubled = page.getByRole('region', { name: 'Doubled count' })
 

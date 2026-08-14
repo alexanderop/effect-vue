@@ -1,11 +1,11 @@
 import { expect, test } from 'vitest'
 import { page } from 'vitest/browser'
 
-import Counter from '../../../examples/basic-atom/Counter.vue'
-import { mountWithRegistry } from '../../support/mountWithRegistry'
+import BasicAtomCounter from '@/examples/basic-atom/BasicAtomCounter.vue'
+import { mountWithRegistry } from '@/testing/mountWithRegistry'
 
 test('updates an Effect Atom through a registry-mounted Vue component', async () => {
-  const mounted = mountWithRegistry(Counter, { label: 'Counter example' })
+  const mounted = mountWithRegistry(BasicAtomCounter, { label: 'Counter example' })
   const counter = page.getByRole('region', { name: 'Counter example' })
 
   try {

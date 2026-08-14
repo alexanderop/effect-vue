@@ -2,7 +2,7 @@ import { assert, describe, it } from '@effect/vitest'
 import { AtomRegistry } from '@effect/atom-vue'
 import { Effect } from 'effect'
 
-import { countAtom, doubledAtom } from '../../../examples/derived-atom-i/atoms'
+import { countAtom, doubledAtom } from '@/examples/derived-atom/atoms'
 
 describe('AtomRegistry isolation', () => {
   it.effect('isolates the same atoms between registries', () =>
